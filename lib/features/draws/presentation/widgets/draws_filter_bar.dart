@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/constants/countries.dart';
-import '../../../../shared/providers/country_providers.dart';
 import '../providers/draws_providers.dart';
 
 class DrawsFilterBar extends ConsumerWidget {
@@ -9,16 +7,10 @@ class DrawsFilterBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final countries = ref.watch(availableCountriesProvider);
     final states = ref.watch(availableStatesProvider);
     final selectedCountry = ref.watch(selectedCountryProvider);
     final selectedState = ref.watch(selectedStateProvider);
-
-    // Por ahora solo mostramos países disponibles en el dropdown de
-    // filtros (los "próximamente" se ven en el selector de Home, no
-    // tiene sentido ofrecerlos acá porque no habría resultados).
-    final availableCountries = kSupportedCountries
-        .where((c) => c.available)
-        .toList();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -32,11 +24,11 @@ class DrawsFilterBar extends ConsumerWidget {
                 isDense: true,
                 border: OutlineInputBorder(),
               ),
-              items: availableCountries
+              items: countries
                   .map(
                     (c) => DropdownMenuItem(
-                      value: c.code,
-                      child: Text('${c.flagEmoji} ${c.name}'),
+                      value: c,
+                      child: Text(_countryLabel(c)),
                     ),
                   )
                   .toList(),
@@ -74,5 +66,14 @@ class DrawsFilterBar extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  String _countryLabel(String code) {
+    switch (code) {
+      case 'US':
+        return 'Estados Unidos';
+      default:
+        return code;
+    }
   }
 }

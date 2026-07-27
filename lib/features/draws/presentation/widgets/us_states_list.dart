@@ -13,20 +13,12 @@ class UsStatesList extends StatelessWidget {
     required this.states,
     this.onStateSelected,
     this.selectedCode,
-    this.shrinkWrap = false,
-    this.physics,
     super.key,
   });
 
   final List<UsState> states;
   final ValueChanged<UsState>? onStateSelected;
   final String? selectedCode;
-
-  /// Poner en `true` cuando este widget se incrusta dentro de OTRO
-  /// scroll (ej. la sección de estados en Home), para que no intente
-  /// scrollear por su cuenta y choque con el scroll padre.
-  final bool shrinkWrap;
-  final ScrollPhysics? physics;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +32,6 @@ class UsStatesList extends StatelessWidget {
 
     return ListView.builder(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      shrinkWrap: shrinkWrap,
-      physics: physics ?? (shrinkWrap ? const NeverScrollableScrollPhysics() : null),
       itemCount: rows.length,
       itemBuilder: (context, index) {
         final row = rows[index];

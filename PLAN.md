@@ -95,36 +95,6 @@ columnas, código + nombre, ordenada alfabéticamente por nombre):
   navigator raíz para que se abra a pantalla completa (tapando el
   bottom nav), que es el comportamiento esperado en un picker.
 
-### Selector de país + Home reorganizado en 3 secciones
-
-A pedido explícito, Home ahora funciona así:
-
-1. **AppBar con selector de país** (`shared/widgets/country_selector_button.dart`):
-   botón con bandera + código que abre un bottom sheet con
-   `kSupportedCountries` (`core/constants/countries.dart`). Hoy solo
-   **Estados Unidos** está `available: true`; México, España y
-   Argentina aparecen como "Próximamente" — la estructura ya está
-   lista para sumarlos sin rediseñar nada (ver Fase 5).
-2. **"Loterías principales"** — usa el nuevo
-   `featuredLotteriesProvider` (`lottery_providers.dart`): resultados
-   del país seleccionado SIN estado asignado (`state == null`), que en
-   EE. UU. da Powerball y Mega Millions. Si un país nuevo sigue esta
-   misma convención (loterías nacionales sin `state`), aparecen acá
-   automáticamente.
-3. **"Loterías por estado"** — reutiliza `UsStatesList` (ahora con
-   `shrinkWrap`/`physics` para incrustarse dentro del scroll de Home)
-   mostrando solo los estados que tienen resultados reales
-   (`statesWithLotteriesProvider`), + botón "Ver todos los estados"
-   que lleva al picker completo (`/draws/states`). Tocar un estado
-   guarda el filtro y navega a la pestaña Sorteos ya filtrada.
-4. **"Noticias"** — igual que antes.
-
-**Cambio de arquitectura importante:** `selectedCountryProvider` se
-movió de `features/draws` a `shared/providers/country_providers.dart`,
-porque ahora es un estado verdaderamente compartido entre Home y
-Sorteos (antes vivía solo en Sorteos). Si mañana Perfil también
-necesita saber el país activo, ya está en el lugar correcto.
-
 ### Sobre la navegación
 
 Se usa `StatefulShellRoute.indexedStack` de `go_router` (patrón oficial
@@ -191,9 +161,6 @@ nada de lo ya construido.
 ### Fase 3 — Features adicionales
 - [x] **3 secciones principales con bottom navigation**: Home, Sorteos
       (con filtros país/estado), Noticias. *(22 jul 2026)*
-- [x] **Selector de país en Home** + reorganización en 3 sub-secciones
-      (principales / por estado / noticias), con catálogo de países
-      preparado para expansión futura. *(23 jul 2026)*
 - [ ] Pantalla de detalle por lotería + historial (`/draws/:lotteryId`).
 - [ ] Favoritos (persistidos con `shared_preferences`).
 - [ ] **Perfil de usuario** — pendiente a propósito, se decidió más

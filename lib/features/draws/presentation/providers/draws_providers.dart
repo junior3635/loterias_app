@@ -1,19 +1,28 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/constants/us_states.dart';
-import '../../../../shared/providers/country_providers.dart';
 import '../../../lotteries/domain/entities/lottery_result.dart';
 import '../../../lotteries/presentation/providers/lottery_providers.dart';
 
-// Nota: `selectedCountryProvider` ahora vive en
-// `shared/providers/country_providers.dart`, porque tanto Home como
-// Sorteos necesitan conocer el país activo (antes vivía solo acá).
+/// País seleccionado en el filtro. Por ahora solo soportamos 'US',
+/// pero se deja como String para poder agregar más países sin
+/// romper la UI (ver PLAN.md → Fase 5, expansión internacional).
+final selectedCountryProvider = StateProvider<String>((ref) => 'US');
 
-/// Estado/provincia seleccionado en el filtro de Sorteos.
-/// `null` = "Todos los estados".
+/// Estado/provincia seleccionado. `null` = "Todos los estados".
 final selectedStateProvider = StateProvider<String?>((ref) => null);
 
-/// Lista de estados disponibles PARA el país seleccionado, derivada de
-/// los resultados que sí tienen datos (no de la lista completa de 51).
+/// Lista de países disponibles, derivada de los datos.
+/// Cuando haya más países reales, esto puede venir de una lista fija
+/// de configuración en vez de derivarse de los resultados.
+final availableCountriesProvider = Provider<List<String>>((ref) {
+  final resultsAsync = ref.watch(allResultsProvider);
+  return resultsAsync.maybeWhen(
+    data: (results) => results.map((r) => r.country).toSet().toList()
+      ..sort(),
+    orElse: () => const ['US'],
+  );
+});
+
+/// Lista de estados disponibles PARA el país seleccionado.
 final availableStatesProvider = Provider<List<String>>((ref) {
   final country = ref.watch(selectedCountryProvider);
   final resultsAsync = ref.watch(allResultsProvider);
@@ -26,14 +35,6 @@ final availableStatesProvider = Provider<List<String>>((ref) {
       ..sort(),
     orElse: () => const [],
   );
-});
-
-/// Igual que `availableStatesProvider`, pero devuelve `UsState`
-/// (código + nombre) en vez de solo el nombre, para poder reutilizar
-/// `UsStatesList` tanto en Home como en el picker de estados.
-final statesWithLotteriesProvider = Provider<List<UsState>>((ref) {
-  final names = ref.watch(availableStatesProvider).toSet();
-  return kUsStates.where((s) => names.contains(s.name)).toList();
 });
 
 /// Resultados filtrados por país y (opcionalmente) estado.

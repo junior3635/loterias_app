@@ -1,0 +1,54 @@
+name: loterias_app
+description: "App de resultados de loterías internacionales, empezando por Estados Unidos."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # --- State management (recomendado 2026: Riverpod) ---
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # --- Networking ---
+  dio: ^5.7.0
+
+  # --- Routing declarativo (recomendado por el equipo de Flutter) ---
+  go_router: ^14.6.2
+
+  # --- Modelos inmutables / JSON ---
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+
+  # --- Persistencia local simple (favoritos, notificaciones, últimos resultados) ---
+  shared_preferences: ^2.3.3
+
+  # --- Utilidades de fecha/zona horaria (importante: sorteos en distintos husos) ---
+  intl: ^0.19.0
+
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # --- Lints oficiales de Flutter ---
+  flutter_lints: ^5.0.0
+
+  # --- Generación de código (freezed, json_serializable, riverpod_generator) ---
+  build_runner: ^2.4.13
+  freezed: ^2.5.7
+  json_serializable: ^6.8.0
+  riverpod_generator: ^2.6.2
+
+  # --- Testing ---
+  mocktail: ^1.0.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
